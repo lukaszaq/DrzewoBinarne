@@ -14,19 +14,30 @@ Firma firma = new Firma(Dyrektor);
 
 firma.DodajPodwładnego(Kierownik1);
 firma.DodajPodwładnego(Podwładny11);
+firma.WybierzPracownika(Kierownik1);
 firma.DodajPodwładnego(Podwładny12);
+firma.WybierzPracownika(Kierownik1);
 firma.DodajPodwładnego(Podwładny13);
 firma.WybierzDyrektora();
 firma.DodajPodwładnego(Kierownik2);
 firma.DodajPodwładnego(Podwładny21);
+firma.WybierzPracownika(Kierownik2);
 firma.DodajPodwładnego(Podwładny22);
+firma.WybierzPracownika(Kierownik2);
 firma.DodajPodwładnego(Podwładny23);
 
+Console.WriteLine("============================================================");
+//3 
 firma.WybierzDyrektora();
 firma.WypiszPodwladnych();
-
+Console.WriteLine("============================================================");
 firma.WybierzPracownika(Kierownik1);
 firma.WypiszPodwladnych();
+
+Console.WriteLine("============================================================");
+//4
+firma.WybierzPracownika(Podwładny23);
+firma.WypiszSzefow();
 
 public class Firma
 {
@@ -74,7 +85,7 @@ public class Firma
         {
             tree.Childrens.ForEach(podwladny =>
             {
-                WybierzPracownika(podwladny);
+                WybierzPracownika(podwladny, pracownik);
             });
         }
         else
@@ -85,25 +96,36 @@ public class Firma
 
     public void WypiszPodwladnych()
     {
-        Console.WriteLine($"\t Podwładni pracownika: {wybranyPracownik.Data} : \n");
+        Console.WriteLine($"Podwładni pracownika: {wybranyPracownik.Data} : \n");
         wybranyPracownik.Childrens.ForEach(podwladny =>
         {
-            Console.WriteLine(podwladny.Data.ToString());
+            Console.WriteLine($"\t {podwladny.Data}");
             this.WypiszPodwladnych(podwladny);
         });
+    }    
+    
+    public void WypiszSzefow()
+    {
+        Console.WriteLine($"Szefowie pracownika: {wybranyPracownik.Data} : \n");
+        TreeNode<Person> temp = wybranyPracownik;
+        while(!temp.IsRoot())
+        {
+            temp = temp.Parent;
+            Console.WriteLine($"\t {temp.Data} : \n");
+        }
     }
 
-    private void WybierzPracownika(TreeNode<Person> pracownik)
+    private void WybierzPracownika(TreeNode<Person> pracownikNode, Person pracownik)
     {
-        if (pracownik.Data.Equals(pracownik.Data))
+        if (pracownikNode.Data.Equals(pracownik))
         {
-            wybranyPracownik = pracownik;
+            wybranyPracownik = pracownikNode;
         }
-        else if(!pracownik.IsLeaf())
+        else if (!pracownikNode.IsLeaf())
         {
-            pracownik.Childrens.ForEach(podwladny =>
+            pracownikNode.Childrens.ForEach(podwladny =>
             {
-                WybierzPracownika(podwladny);
+                WybierzPracownika(podwladny, pracownik);
             });
         }
     }
